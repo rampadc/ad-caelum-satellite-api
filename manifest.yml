@@ -1,0 +1,7 @@
+---
+applications:
+- name: ad-caelum-satellites-api
+  memory: 512M
+  instances: 1
+  routes:
+  - route: ad-caelum.au-syd.mybluemix.net
