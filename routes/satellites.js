@@ -14,10 +14,10 @@ router.get('/above/:lat/:lng/:searchRadius', cors(), (req, res) => {
   const lng = req.params.lng;
   const searchRadius = req.params.searchRadius;
   const altitude = 0;
+  const satelliteDataCollection = global.collection;
 
   // category = space + earth science
   request(`https://www.n2yo.com/rest/v1/satellite/above/${lat}/${lng}/${altitude}/${searchRadius}/26/&apiKey=${n2yoApiKey}`, { json: true }).then(result => {
-    const satelliteDataCollection = global.collection;
 
     const above = result['above'];
     let nasaSatellites = above.filter(el => {
@@ -40,9 +40,8 @@ router.get('/above/:lat/:lng/:searchRadius', cors(), (req, res) => {
           console.log(err);
         }
         if (doc) {
-          s['tleLines'] = doc['lines'];
-          s['dataUrl'] = doc['dataUrl'];
-          // s['test_satid'] = doc['satelliteId'];
+          // merge `doc` with `s`
+          s = Object.assign(s, doc);
 
           satellitesWithTLEs.push(s);
         } else {
