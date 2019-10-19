@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('satellite-location-api:server');
 var http = require('http');
+var mongodb = require('mongodb');
+
 
 /**
  * Get port from environment and store in Express.
@@ -22,10 +24,29 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Initialise MongoDB connection
+ */
+var MongoClient = mongodb.MongoClient;
+const mongoUri = 'mongodb+srv://reader:reader@caedum-0-aecpr.mongodb.net/test?retryWrites=true&w=majority';
+const client = new MongoClient(mongoUri, { 
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+client.connect(err => {
+  if (err) {
+    console.error('MongoDB connection error');
+    console.log(err);
+  } else {
+    console.log('MongoDB connected');
+    global.collection = client.db("satellites").collection("data");
+    server.listen(port);
+  }
+});
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -86,5 +107,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  console.log('Listening on ' + bind);
 }
