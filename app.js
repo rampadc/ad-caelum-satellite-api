@@ -8,6 +8,9 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var satellitesRouter = require('./routes/satellites');
 
+var refreshPositions = require('./bin/refresh_satellites_positions');
+refreshPositions();
+
 var app = express();
 
 // view engine setup
